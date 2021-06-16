@@ -4,3 +4,4 @@ The most recent data are here:
 <a href="cali_crude_2019.png" target="Click for higher resolution">
   <img border="0" align="center"  src="cali_crude_2019_small.png"/>
 </a>
+
