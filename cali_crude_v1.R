@@ -5,7 +5,7 @@ library(zoo)
 library(ggrepel)
 library(viridis)
 library(ggthemes)
-
+library(scales)
 # CARB data -----------------------------------------------------------
 
 # set_png("masnadi_fig_1.png",width=1500)
@@ -30,110 +30,14 @@ library(ggthemes)
 
 
 # Location of CARB carbon intensity pdf file
-#2017 file has 2015, 2016, and 2017 data
 location <- 'https://www.arb.ca.gov/fuels/lcfs/crude-oil/2017_crude_average_ci_value_final.pdf'
-location<- "2017_crude_average_ci_value_final.pdf"
-# Extract the 2017 data
-out <- extract_tables(location)
-#need to fix the last table in the data for 2017
-adds<-out[[8]]
-out[[8]]<-NULL
-cali_data<-data.frame(do.call("rbind", out),stringsAsFactors = F)
-#we'll have to paste this back into the bottom of the 2015 data where the error was (see  PDF p 7)
-adds<-as_tibble(adds)%>%mutate(X0="")%>% select(X0,everything())
-
-#2015 data
-cali_2015<-cali_data %>% slice(4:228)
-total_vol=cali_2015$X4[2]
-avg_ci=cali_2015$X3[2]
-#cali_data <-cali_data %>% slice(-c(1:3))
-names(cali_2015)<-cali_2015[1,]
-cali_2015<-cali_2015[-1,]
-cali_2015[1,1]<-"All"
-cali_2015<-clean_names(cali_2015)
-cali_2015<-cali_2015%>% 
-  rename(volume = 4,ci_g_mj=3)%>%mutate(volume=as.numeric(gsub(",","",volume)))%>%
-  filter(!is.na(volume))%>%
-  mutate(country_state=ifelse(country_state=="",NA,country_state),#set blanks to NA
-         country_state=na.locf(country_state), #use zoo to fill forward
-         ci_g_mj=as.numeric(ci_g_mj),
-         year=2015,
-         total_volume=as.numeric(gsub(",","",total_vol)),
-         avg_ci=as.numeric(avg_ci))
-
-cali_2016<-cali_data %>% slice(229:453)
-total_vol=cali_2016$X4[2]
-avg_ci=cali_2016$X3[2]
-#cali_data <-cali_data %>% slice(-c(1:3))
-names(cali_2016)<-cali_2016[1,]
-cali_2016<-cali_2016[-1,]
-cali_2016[1,1]<-"All"
-cali_2016<-clean_names(cali_2016)
-cali_2016<-cali_2016%>% 
-  rename(volume = 4,ci_g_mj=3)%>%mutate(volume=as.numeric(gsub(",","",volume)))%>%
-  filter(!is.na(volume))%>%
-  mutate(country_state=ifelse(country_state=="",NA,country_state),#set blanks to NA
-         country_state=na.locf(country_state), #use zoo to fill forward
-         ci_g_mj=as.numeric(ci_g_mj),
-         year=2016,
-         total_volume=as.numeric(gsub(",","",total_vol)),
-         avg_ci=as.numeric(avg_ci))
-
-
-cali_2017<-cali_data %>% slice(454:n())
-total_vol=cali_2017$X4[2]
-avg_ci=cali_2017$X3[2]
-#cali_data <-cali_data %>% slice(-c(1:3))
-names(cali_2017)<-cali_2017[1,]
-cali_2017<-cali_2017[-1,]
-cali_2017[1,1]<-"All"
-cali_2017<-clean_names(cali_2017)
-cali_2017<-cali_2017%>% 
-  rename(volume = 4,ci_g_mj=3)%>%mutate(volume=as.numeric(gsub(",","",volume)))%>%
-  filter(!is.na(volume))%>%
-  mutate(country_state=ifelse(country_state=="",NA,country_state),#set blanks to NA
-         country_state=na.locf(country_state), #use zoo to fill forward
-         ci_g_mj=as.numeric(ci_g_mj),
-         year=2017,
-         total_volume=as.numeric(gsub(",","",total_vol)),
-         avg_ci=as.numeric(avg_ci))
-
-
-#2018 data
-
-
-location<- "2018_crude_average_ci_value_final.pdf"
-# Extract the 2018 data
-out <- extract_tables(location)
-cali_data<-data.frame(do.call("rbind", out),stringsAsFactors = F)
-total_vol=cali_data$X4[3]
-avg_ci=cali_data$X4[2]
-cali_data <-cali_data %>% slice(-c(1:3))
-names(cali_data)<-cali_data[1,]
-cali_data<-cali_data[-1,]
-cali_data[1,1]<-"All"
-cali_data<-clean_names(cali_data)
-
-cali_data<-cali_data%>% 
-  rename(volume = 4)%>%mutate(volume=as.numeric(gsub(",","",volume)))%>%
-  filter(!is.na(volume))%>%
-  mutate(country_state=ifelse(country_state=="",NA,country_state),#set blanks to NA
-         country_state=na.locf(country_state), #use zoo to fill forward
-         ci_g_mj=as.numeric(ci_g_mj),
-         year=2018,
-         total_volume=as.numeric(gsub(",","",total_vol)),
-         avg_ci=as.numeric(avg_ci)
-         )
-
-cali_2018<-cali_data
-
-
+location<- "2017_crude_average_ci_value_edits.pdf"
 location<- "2019_crude_average_ci_value_final.pdf"
+
 # Extract the 2019 data
 out <- extract_tables(location)
 cali_data<-data.frame(do.call("rbind", out),stringsAsFactors = F)
-total_vol=cali_data$X4[3]
-avg_ci=cali_data$X4[2]
+cali_avg<-as.numeric(cali_data$X4[2])
 cali_data <-cali_data %>% slice(-c(1:4))
 names(cali_data)<-cali_data[1,]
 cali_data<-cali_data[-1,]
@@ -146,50 +50,44 @@ cali_data<-cali_data%>%
   mutate(country_state=ifelse(country_state=="",NA,country_state),#set blanks to NA
          country_state=na.locf(country_state), #use zoo to fill forward
          ci_g_mj=as.numeric(ci_g_mj),
-         year=2019,
-         total_volume=as.numeric(gsub(",","",total_vol)),
-         avg_ci=as.numeric(avg_ci)
-         )
-cali_2019<-cali_data
-
-
-#all the california data
-cali_data<-bind_rows(cali_2015,cali_2016,cali_2017,cali_2018,cali_2019)
+         year=2019)
 
 
 
-graph_data<-cali_data %>% 
+graph_data<-cali_data %>% filter(country_state!="All")%>%
          mutate(Canada=grepl("Canada",country_state),US=grepl("US",country_state),
          Type=interaction(Canada,US),
          Type=fct_recode(Type,"International"="FALSE.FALSE",
                          "Canada"="TRUE.FALSE",
-                         "US"="FALSE.TRUE") ) %>% 
-  group_by(year)%>%
-  arrange(.,ci_g_mj) %>% 
+                         "US"="FALSE.TRUE") ) %>% arrange(.,ci_g_mj) %>% 
   mutate(crude_num=1:n(),cum_prod=cumsum(volume))
   
   canada_data<-cali_data %>% filter(country_state=="Canada") %>%
     summarize(Canada_avg=sum(ci_g_mj*volume)/sum(volume))
 
-
-
-#graph_data$test<-graph_data$cum_prod/365/10^6
-
-
-ggplot(graph_data) +
+library(stringr)
+ggplot(graph_data%>%mutate(crude_label=str_wrap(crude_name,width = 12))) +
   geom_rect(mapping=aes(xmin=(cum_prod-volume)/365/10^3,xmax=cum_prod/365/10^3,ymin=0,ymax=ci_g_mj,colour=Type,fill=Type))+
   
-  geom_text_repel(data=graph_data %>% filter(Canada==TRUE),
-                  aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj, label = crude_name),
-                  size = 4.5,nudge_y = 15,nudge_x = -300)+
+  geom_label_repel(data=graph_data %>%mutate(crude_label=paste(str_wrap(crude_name,width = 12),"\n(",ci_g_mj,"g/MJ)",sep = ""))%>%filter(Canada==TRUE),
+                  aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label = crude_label),
+                  size = 4.5, ylim = c(35, 50),direction="both",force=2,box.padding = 1)+
   
+  geom_label_repel(data=graph_data %>% slice(which.min(abs(graph_data$ci_g_mj-cali_avg))),
+                  aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj),label=paste("California 2019\naverage\n(",cali_avg,"g/MJ)",sep=""),
+                  size = 4.5,nudge_y =7,nudge_x = 120,color=blakes_blue)+
+  
+  geom_label_repel(data=graph_data %>% slice(which.min(abs(graph_data$ci_g_mj-10.3))),
+                  aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj),label="Masnadi et al. (2018)\nglobal average\n(10.3 g/MJ)",
+                  size = 4.5,nudge_y =7,nudge_x = -200,color=blakes_blue)+
+
   scale_fill_viridis("",discrete=T,,option = "D",labels=c("International Crudes","Canadian Crudes","US Crudes"))+  
   scale_colour_viridis("",discrete=T,option = "D",labels=c("International Crudes","Canadian Crudes","US Crudes"))+  
   
   
-  scale_x_continuous(expand=c(0,0),breaks = seq(0,2000,250),limits = c(0,max(graph_data$cum_prod)/365/10^3))+
+  scale_x_continuous(breaks = pretty_breaks(),expand=c(0,0))+
+  expand_limits(x=1900)+
   #scale_y_continuous(expand=c(0,0),limits=c(-20,300))+
-  facet_wrap(~year)+
   theme_tufte()+theme(legend.position = "bottom",
                       legend.text = element_text(colour="black", size = 12),
                       plot.caption = element_text(size = 10, face = "italic",hjust=0),
@@ -199,9 +97,10 @@ ggplot(graph_data) +
                       text = element_text(size = 20,face = "bold"),
                       axis.text.y = element_text(size = 12,face = "bold", colour="black"),
                       #axis.text.x = element_blank(),
-                      axis.text.x = element_text(size = 14, colour = "black"),
+                      axis.text.x = element_text(size = 12, colour = "black"),
                       strip.text.x = element_text(size = 12, colour = "black", angle = 0),
-                      axis.title.y = element_text(size = 14,face = "bold", colour="black"),
+                      axis.title.y = element_text(size = 15,face = "bold", colour="black"),
+                      axis.title.x = element_text(size = 14,face = "bold", colour="black"),
   NULL)+
   guides(fill=guide_legend(nrow=1,byrow=TRUE))+
   labs(x=expression("Refinery Crude Supply in 2019, Thousands of Barrels per Day"),y=expression('Oil carbon intensity '*'(gCO'[2]*'e/MJ)'),
@@ -209,18 +108,6 @@ ggplot(graph_data) +
        #subtitle="Difference between solid fill and outline is change in bids due to proposed federal fuel-specific OBPS.\nAssumed OBPS is 800kg/MWh for coal, 370kg/MWh for gas.",
        caption="Source: CARB (2020) data at https://www.arb.ca.gov/fuels/lcfs/crude-oil/crude-oil.htm.")
 ggsave("cali_crude_tab.png",width=16,height=9,dpi=300)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 data_2017<-cali_data
