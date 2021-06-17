@@ -213,7 +213,7 @@ graph_data<-cali_data %>% filter(country_state!="All")%>%
                         axis.title.x = element_text(size = 14,face = "bold", colour="black"),
                         NULL)+
     guides(fill=guide_legend(nrow=1,byrow=TRUE))+
-    labs(x=expression("Refinery Crude Supply in 2019, Thousands of Barrels per Day"),y=expression('Oil carbon intensity '*'(gCO'[2]*'e/MJ)'),
+    labs(x=expression("Refinery Crude Supply, Thousands of Barrels per Day"),y=expression('Oil carbon intensity '*'(gCO'[2]*'e/MJ)'),
          title="2015-19 California Carbon Intensity of Refinery Crude Supply",
          #subtitle="Difference between solid fill and outline is change in bids due to proposed federal fuel-specific OBPS.\nAssumed OBPS is 800kg/MWh for coal, 370kg/MWh for gas.",
          caption="Source: CARB (2017-2020) data at https://www.arb.ca.gov/fuels/lcfs/crude-oil/crude-oil.htm. Graph by Andrew Leach")
@@ -224,6 +224,7 @@ graph_data<-cali_data %>% filter(country_state!="All")%>%
 
 year_vec<-seq(2015,2019,1)
 for(year_index in year_vec)
+{
     ggplot(graph_data%>%filter(year==year_index) %>%mutate(crude_label=str_wrap(crude_name,width = 12))) +
       geom_rect(mapping=aes(xmin=(cum_prod-volume)/365/10^3,xmax=cum_prod/365/10^3,ymin=0,ymax=ci_g_mj,colour=Type,fill=Type))+
       
@@ -244,6 +245,7 @@ for(year_index in year_vec)
       
       scale_x_continuous(breaks = pretty_breaks(n=5),expand=c(0,0))+
       expand_limits(x=1900)+
+      expand_limits(y=55)+
       #facet_wrap(~year,ncol = 1)+
       #scale_y_continuous(expand=c(0,0),limits=c(-20,300))+
       theme_tufte()+theme(legend.position = "bottom",
@@ -261,14 +263,13 @@ for(year_index in year_vec)
                           axis.title.x = element_text(size = 14,face = "bold", colour="black"),
                           NULL)+
       guides(fill=guide_legend(nrow=1,byrow=TRUE))+
-      labs(x=expression("Refinery Crude Supply in 2019, Thousands of Barrels per Day"),y=expression('Oil carbon intensity '*'(gCO'[2]*'e/MJ)'),
-           title="2015-19 California Carbon Intensity of Refinery Crude Supply",
+      labs(x=expression("Refinery Crude Supply, Thousands of Barrels per Day"),y=expression('Oil carbon intensity '*'(gCO'[2]*'e/MJ)'),
+           title=paste("Carbon Intensity of California Refinery Crude Supply,",year_index),
            #subtitle="Difference between solid fill and outline is change in bids due to proposed federal fuel-specific OBPS.\nAssumed OBPS is 800kg/MWh for coal, 370kg/MWh for gas.",
            caption="Source: CARB (2017-2020) data at https://www.arb.ca.gov/fuels/lcfs/crude-oil/crude-oil.htm. Graph by Andrew Leach")
-    
-    ggsave("cali_crude_tab.png",width=20,height=18,dpi=600)
-    ggsave("cali_crude_small.png",width=20,height=18,dpi=150)
-    
+     ggsave(paste("cali_crude_",year_index,".png",sep=""),width=16,height=9,dpi=600)
+    ggsave(paste("cali_crude_",year_index,"_small.png",sep=""),width=16,height=9,dpi=150)
+}   
     
     
 
