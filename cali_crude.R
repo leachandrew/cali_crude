@@ -153,9 +153,38 @@ cali_data<-cali_data%>%
          )
 cali_2019<-cali_data
 
+#extract the 2020 data
+
+location<- "2020_crude_average_ci_value_final.pdf"
+# Extract the 2019 data
+out <- extract_tables(location)
+cali_data<-data.frame(do.call("rbind", out),stringsAsFactors = F)
+total_vol=cali_data$X4[3]
+avg_ci=cali_data$X4[2]
+cali_data <-cali_data %>% slice(-c(1:4))
+names(cali_data)<-cali_data[1,]
+cali_data<-cali_data[-1,]
+cali_data[1,1]<-"All"
+cali_data<-clean_names(cali_data)
+
+
+cali_data<-cali_data%>% 
+  rename(volume = 4)%>%mutate(volume=as.numeric(gsub(",","",volume)))%>%
+  filter(!is.na(volume))%>%
+  mutate(country_state=ifelse(country_state=="",NA,country_state),#set blanks to NA
+         country_state=na.locf(country_state), #use zoo to fill forward
+         ci_g_mj=as.numeric(ci_g_mj),
+         year=2020,
+         total_volume=as.numeric(gsub(",","",total_vol)),
+         avg_ci=as.numeric(avg_ci)
+  )
+cali_2020<-cali_data
+
+
+
 
 #all the california data
-cali_data<-bind_rows(cali_2015,cali_2016,cali_2017,cali_2018,cali_2019)
+cali_data<-bind_rows(cali_2015,cali_2016,cali_2017,cali_2018,cali_2019,cali_2020)
 
 
 
@@ -222,7 +251,7 @@ graph_data<-cali_data %>% filter(country_state!="All")%>%
     ggsave("cali_crude_small.png",width=20,height=18,dpi=150)
     
 
-year_vec<-seq(2015,2019,1)
+year_vec<-seq(2015,2020,1)
 for(year_index in year_vec)
 {
     ggplot(graph_data%>%filter(year==year_index) %>%mutate(crude_label=str_wrap(crude_name,width = 12))) +
@@ -230,22 +259,22 @@ for(year_index in year_vec)
       
       geom_label_repel(data=graph_data %>%filter(year==year_index) %>%mutate(crude_label=paste(str_wrap(crude_name,width = 12),"\n(",ci_g_mj,"g/MJ)",sep = ""))%>%filter(Canada==TRUE),
                        aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label = crude_label),
-                       size = 2.5, ylim = c(35, 50),direction="both",force=2,box.padding = 1)+
+                       size = 3.5, ylim = c(35, 50),direction="both",force=2,box.padding = 1)+
       
       geom_label_repel(data=graph_data %>% filter(year==year_index) %>%group_by(year)%>%slice(which.min(abs(ci_g_mj-avg_ci))),
                        aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label=paste("California ",year,"\naverage\n(",avg_ci,"g/MJ)",sep="")),
-                       size = 2.5,nudge_y =10,nudge_x = 120,color=blakes_blue)+
+                       size = 3.5,nudge_y =10,nudge_x = 120,color=blakes_blue)+
       
       geom_label_repel(data=graph_data %>% filter(year==year_index) %>%group_by(year)%>%slice(which.min(abs(ci_g_mj-10.3))),
                        aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj),label="Masnadi et al. (2018)\nglobal average\n(10.3 g/MJ)",
-                       size = 2.5,nudge_y =10,nudge_x = -50,color=blakes_blue)+
+                       size = 3.5,nudge_y =10,nudge_x = -50,color=blakes_blue)+
       scale_fill_viridis("",discrete=T,,option = "D",labels=c("International Crudes","Canadian Crudes","US Crudes"))+  
       scale_colour_viridis("",discrete=T,option = "D",labels=c("International Crudes","Canadian Crudes","US Crudes"))+  
       
       
       scale_x_continuous(breaks = pretty_breaks(n=5),expand=c(0,0))+
-      expand_limits(x=1900)+
-      expand_limits(y=55)+
+      #expand_limits(x=1900)+
+      #expand_limits(y=55)+
       #facet_wrap(~year,ncol = 1)+
       #scale_y_continuous(expand=c(0,0),limits=c(-20,300))+
       theme_tufte()+theme(legend.position = "bottom",
