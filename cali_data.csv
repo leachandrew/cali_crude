@@ -1,0 +1,232 @@
+country_state,crude_name,ci_g_mj,x2012_volume_bbl
+All,2012 Annual Crude Average CI,11.36,NA
+Algeria,Saharan,11.39,1411725
+Angola,Dalia,7.86,2803487
+Angola,Gimboa,11.39,177590
+Angola,Girassol,10.43,1232150
+Angola,Greater Plutonio,8.82,1956342
+Angola,Kissanje,11.39,682575
+Angola,Nemba,11.39,24310
+Angola,Pazflor,11.39,7757093
+Argentina,Escalante,7.51,625020
+Argentina,Medanito,11.39,310000
+Australia,Pyrenees,5.96,746771
+Australia,Vincent,11.39,764185
+Brazil,Frade,6.62,874950
+Brazil,Jubarte,11.39,357100
+Brazil,Lula,11.39,552692
+Brazil,Marlim,6.75,5622108
+Brazil,Ostra,5.71,947741
+Brazil,Roncador,11.39,969122
+Brazil,Roncador Heavy,11.39,1839954
+Canada,Albian Muskeg River Heavy,11.39,375060
+Canada,Albian Heavy Synthetic,21.02,4407187
+Canada,Cold Lake,18.74,4540591
+Canada,Koch Alberta,7.61,53570
+Canada,Lloydminster,11.39,2773
+Canada,Mixed Sweet,7.75,53570
+Canada,Peace River Sour,11.39,360000
+Canada,Shell Synthetic Light,11.39,475489
+Canada,Suncor Synthetic (all grades),24.49,2925958
+Canada,Surmont,11.39,953907
+Canada,Wabasca,11.39,385817
+Colombia,Cano Limon,11.39,1175973
+Colombia,Castilla,6.45,13038302
+Colombia,Magdalena,11.39,6841012
+Colombia,Rubiales,11.39,120000
+Colombia,South Blend,11.39,4169622
+Colombia,Vasconia,6.63,14974315
+Congo,Azurite,11.39,984378
+Congo,Djeno,11.39,324585
+Ecuador,Napo,7.45,21580457
+Ecuador,Oriente,9.34,34975946
+Equatorial Guinea,Ceiba,11.39,788000
+Iraq,Basra Light,12.08,57829491
+Kuwait,Kuwait,11.39,3720000
+Libya,Amna,11.39,513090
+Neutral Zone,Ratawi,5.77,530000
+Nigeria,Antan,11.39,576160
+Oman,Oman,12.3,2008966
+Peru,Loreto,5.82,2420063
+Peru,Mayna,7.14,230000
+Russia,ESPO,12.09,9670018
+Russia,M100,11.39,416874
+Saudi Arabia,Arab Extra Light,6.86,17475651
+Saudi Arabia,Arab Light,6.75,49600000
+Saudi Arabia,Arab Medium,11.39,10390000
+Trinidad,Calypso,6.95,620210
+Venezuela,Boscan,12.53,90000
+Venezuela,Hamaca DCO,11.39,340000
+Venezuela,Mesa 30,11.39,357753
+Venezuela,Petrozuata (all grades),23.58,1969774
+Venezuela,Zuata (all grades),23.5,1056003
+US Alaska,ANS,12.81,75026823
+US Colorada,Niobrara,11.39,344819
+US New Mexico,Four Corners,11.39,150345
+US North Dakota,Bakken,11.39,674519
+US North Dakota,North Dakota Sweet,11.39,57446
+US Texas,West Texas Intermediate,11.39,40710
+US Utah,Covenant,11.39,819520
+US California*,Aliso Canyon,1.97,106177
+US California*,Ant Hill,26.37,37336
+US California*,Antelope Hills,2.69,127271
+US California*,"Antelope Hills, North",13.16,344495
+US California*,Arroyo Grande,27.81,360676
+US California*,Asphalto,7.92,334862
+US California*,Bandini,7.75,14863
+US California*,Bardsdale,5.24,64242
+US California*,Barham Ranch,2.74,73669
+US California*,Beer Nose,2.18,105077
+US California*,Belgian Anticline,3.62,49056
+US California*,Bellevue,8.27,28794
+US California*,"Bellevue, West",8.63,13638
+US California*,"Belmont, Offshore",3.19,817650
+US California*,"Belridge, North",5,2648572
+US California*,"Belridge, South",14.49,23577958
+US California*,Beverly Hills,3.33,757920
+US California*,Big Mountain,3.15,31965
+US California*,Blackwells Corner,11.05,10309
+US California*,Brea-Olinda,2.97,1133831
+US California*,Buena Vista,13.61,1104970
+US California*,Burrel,16.44,10108
+US California*,Cabrillo,2.84,23888
+US California*,Canal,4.04,26453
+US California*,Canfield Ranch,3.58,111535
+US California*,Caneros Creek,2.96,23490
+US California*,Cascade,2.2,160549
+US California*,Casmalia,11.61,195253
+US California*,Castaic Hills,2.79,12347
+US California*,Cat Canyon,5.09,839883
+US California*,Cheviot Hills,3.06,15523
+US California*,Chico-Martinez,3.83,27806
+US California*,Cienaga Canyon,3.89,38922
+US California*,Coalinga,25.36,5544989
+US California*,"Coles Levee, N",3.47,142360
+US California*,"Coles Levee, S",4.27,79246
+US California*,Comanche,10.75,23573
+US California*,"Coyote, East",5.59,219777
+US California*,"Cuyama, South",11.86,215575
+US California*,Cymric,19.91,13684277
+US California*,Deer Creek,18.29,47488
+US California*,Del Valle,4.3,53820
+US California*,Devils Den,3.63,20857
+US California*,Edison,9.03,823085
+US California*,El Segundo,2.98,15533
+US California*,Elk Hills,5.36,12978129
+US California*,"Elwood, S., Offshore",4.18,1171615
+US California*,Fruitvale,10.24,417701
+US California*,Greeley,8.14,113233
+US California*,Hasley Canyon,2.07,38092
+US California*,Helm,3.35,76314
+US California*,Holser,3.01,23487
+US California*,Honor Rancho,2.69,52682
+US California*,Huntington Beach,7.8,1982425
+US California*,Inglewood,8.74,2779781
+US California*,Jacalitos,2.22,139061
+US California*,Jasmin,17.54,134603
+US California*,Kern Front,25.06,3322714
+US California*,Kern River,9.55,26186959
+US California*,Kettleman Middle Dome,3.53,57570
+US California*,Kettleman North Dome,4.7,27351
+US California*,Landslide,10.49,37023
+US California*,Las Cienegas,4.46,374205
+US California*,Livermore,2.17,14601
+US California*,Lompoc,31.05,308222
+US California*,Long Beach,5.12,1379227
+US California*,Long Beach Airport,3.73,16443
+US California*,Los Angeles Downtown,4.11,37442
+US California*,"Los Angeles, East",8.28,20850
+US California*,Lost Hills,11.4,10744022
+US California*,"Lost Hills, Northwest",4.35,29319
+US California*,Lynch Canyon,7.73,144944
+US California*,McCool Ranch,1.71,13793
+US California*,McDonald Anticline,4.92,69538
+US California*,McKittrick,15.47,2073737
+US California*,Midway-Sunset,21.18,29280377
+US California*,"Montalvo, West",2.63,743871
+US California*,Montebello,10.29,591594
+US California*,Monument Junction,3.81,114057
+US California*,Mount Poso,20.57,737799
+US California*,Mountain View,4.42,119205
+US California*,Newhall-Potrero,2.83,127544
+US California*,"Newport, West",4.33,92769
+US California*,Oak Canyon,3.81,25807
+US California*,Oak Park,2.13,15561
+US California*,Oakridge,2.57,139770
+US California*,Oat Mountain,1.9,101195
+US California*,Ojai,3.27,288758
+US California*,Olive,1.93,32186
+US California*,Orcutt,12.52,1255451
+US California*,Oxnard,16.89,120901
+US California*,Paloma,3.42,30033
+US California*,Placerita,31.66,954361
+US California*,Playa Del Rey,6.04,50258
+US California*,Pleito,4.01,257895
+US California*,Poso Creek,28.41,2735209
+US California*,Pyramid Hills,2.92,57368
+US California*,Railroad Gap,6.56,151085
+US California*,Raisin City,7.64,134267
+US California*,Ramona,3.37,49060
+US California*,Richfield,3.63,330802
+US California*,Rincon,2.93,361102
+US California*,Rio Bravo,4.85,288948
+US California*,Rio Viejo,2.5,82445
+US California*,Riverdale,2.99,59992
+US California*,Rose,2.1,239302
+US California*,Rosecrans,5.18,160801
+US California*,"Rosecrans, South",3.11,10126
+US California*,Rosedale,6.6,14387
+US California*,Rosedale Ranch,8.84,169915
+US California*,Round Mountain,28.73,3848124
+US California*,Russell Ranch,6.56,66999
+US California*,Salt Lake,2.82,42607
+US California*,"Salt Lake, South",3.68,39329
+US California*,San Ardo,28.82,7262337
+US California*,San Miguelito,4.44,495804
+US California*,San Vicente,2.31,287856
+US California*,Sansinena,2.54,214214
+US California*,Santa Clara Avenue,3.31,61079
+US California*,Santa Fe Springs,11.34,723809
+US California*,Santa Maria Valley,6.48,222103
+US California*,Santa Susana,3.14,17423
+US California*,Sargent,4.77,40006
+US California*,Saticoy,3.26,43968
+US California*,Sawtelle,2.83,175539
+US California*,Seal Beach,4.07,453799
+US California*,Semitropic,3.39,43624
+US California*,Sespe,2.91,392208
+US California*,"Shafter, North",2.54,1094052
+US California*,Shiells Canyon,3.24,83187
+US California*,South Mountain,3.1,521752
+US California*,Stockdale,1.71,110058
+US California*,Tapia,6.42,41682
+US California*,"Tapo Canyon, South",2.87,11136
+US California*,Tejon,7.96,772028
+US California*,Tejon Hills,5.74,17886
+US California*,"Tejon, North",4.72,47087
+US California*,Temescal,3.1,27898
+US California*,Ten Section,6.22,103853
+US California*,Timber Canyon,3.3,38697
+US California*,Torrance,4.45,393196
+US California*,Torrey Canyon,2.88,121197
+US California*,Union Avenue,1.79,13583
+US California*,Ventura,4.35,5084669
+US California*,Wayside Canyon,2.93,103234
+US California*,West Mountain,2.89,10831
+US California*,Wheeler Ridge,3.34,100254
+US California*,White Wolf,1.64,11624
+US California*,Whittier,2.51,106366
+US California*,Wilmington,6.36,13260055
+US California*,Yowlumne,11.22,295795
+US California*,Zaca,10.45,199167
+US Federal OCS,Beta,1.74,1598275
+US Federal OCS,Carpinteria,2.62,363421
+US Federal OCS,Dos Cuadras,3.83,1053098
+US Federal OCS,Hondo,4.27,4402251
+US Federal OCS,Hueneme,4.33,105334
+US Federal OCS,Pescado,3.45,2145845
+US Federal OCS,Point Arguello,8.68,1510212
+US Federal OCS,Point Pedernales,6,1813036
+US Federal OCS,Sacate,2.33,2789222
+US Federal OCS,Santa Clara,2.41,674216
+US Federal OCS,Sockeye,5.82,1140030
