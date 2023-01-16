@@ -180,11 +180,39 @@ cali_data<-cali_data%>%
   )
 cali_2020<-cali_data
 
+#extract the 2021 data
+
+location<- "2021_crude_average_ci_value_final.pdf"
+# Extract the 2021 data
+out <- extract_tables(location)
+cali_data<-data.frame(do.call("rbind", out),stringsAsFactors = F)
+total_vol=cali_data$X4[3]
+avg_ci=cali_data$X4[2]
+cali_data <-cali_data %>% slice(-c(1:4))
+names(cali_data)<-cali_data[1,]
+cali_data<-cali_data[-1,]
+cali_data[1,1]<-"All"
+cali_data<-clean_names(cali_data)
+
+
+cali_data<-cali_data%>% 
+  rename(volume = 4)%>%mutate(volume=as.numeric(gsub(",","",volume)))%>%
+  filter(!is.na(volume))%>%
+  mutate(country_state=ifelse(country_state=="",NA,country_state),#set blanks to NA
+         country_state=na.locf(country_state), #use zoo to fill forward
+         ci_g_mj=as.numeric(ci_g_mj),
+         year=2021,
+         total_volume=as.numeric(gsub(",","",total_vol)),
+         avg_ci=as.numeric(avg_ci)
+  )
+cali_2021<-cali_data
+
+
 
 
 
 #all the california data
-cali_data<-bind_rows(cali_2015,cali_2016,cali_2017,cali_2018,cali_2019,cali_2020)
+cali_data<-bind_rows(cali_2015,cali_2016,cali_2017,cali_2018,cali_2019,cali_2020,cali_2021)
 
 
 
@@ -205,27 +233,26 @@ graph_data<-cali_data %>% filter(country_state!="All")%>%
 
 #graph_data$test<-graph_data$cum_prod/365/10^6
   library(stringr)
-  ggplot(graph_data%>%mutate(crude_label=str_wrap(crude_name,width = 12))) +
+  ggplot(graph_data%>% filter(year>=2015)%>%
+           mutate(crude_label=str_wrap(crude_name,width = 12))) +
     geom_rect(mapping=aes(xmin=(cum_prod-volume)/365/10^3,xmax=cum_prod/365/10^3,ymin=0,ymax=ci_g_mj,colour=Type,fill=Type))+
     
-    geom_label_repel(data=graph_data %>% group_by(year) %>% mutate(crude_label=paste(str_wrap(crude_name,width = 12),"\n(",ci_g_mj,"g/MJ)",sep = ""))%>%filter(Canada==TRUE),
-                     aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label = crude_label),
-                     size = 2.5, ylim = c(35, 50),direction="both",force=2,box.padding = 1)+
+    #geom_label_repel(data=graph_data %>% group_by(year) %>% mutate(crude_label=paste(str_wrap(crude_name,width = 12),"\n(",ci_g_mj,"g/MJ)",sep = ""))%>%filter(Canada==TRUE),
+    #                 aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label = crude_label),
+    #                 size = 2.5, ylim = c(35, 50),direction="both",force=2,box.padding = 1)+
     
-    geom_label_repel(data=graph_data %>% group_by(year)%>%slice(which.min(abs(ci_g_mj-avg_ci))),
-                     aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label=paste("California ",year,"\naverage\n(",avg_ci,"g/MJ)",sep="")),
-                     size = 2.5,nudge_y =10,nudge_x = 120,color=blakes_blue)+
+    #geom_label_repel(data=graph_data %>% group_by(year)%>%slice(which.min(abs(ci_g_mj-avg_ci))),
+    #                 aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label=paste("California ",year,"\naverage\n(",avg_ci,"g/MJ)",sep="")),
+    #                 size = 2.5,nudge_y =10,nudge_x = 120,color="dodgerblue")+
     
-    geom_label_repel(data=graph_data %>% group_by(year)%>%slice(which.min(abs(ci_g_mj-10.3))),
-                     aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj),label="Masnadi et al. (2018)\nglobal average\n(10.3 g/MJ)",
-                     size = 2.5,nudge_y =10,nudge_x = -50,color=blakes_blue)+
+    #geom_label_repel(data=graph_data %>% group_by(year)%>%slice(which.min(abs(ci_g_mj-10.3))),
+    #                 aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj),label="Masnadi et al. (2018)\nglobal average\n(10.3 g/MJ)",
+    #                 size = 2.5,nudge_y =10,nudge_x = -50,color="dodgerblue")+
     scale_fill_viridis("",discrete=T,,option = "D",labels=c("International Crudes","Canadian Crudes","US Crudes"))+  
     scale_colour_viridis("",discrete=T,option = "D",labels=c("International Crudes","Canadian Crudes","US Crudes"))+  
-    
-    
     scale_x_continuous(breaks = pretty_breaks(n=5),expand=c(0,0))+
-    expand_limits(x=1900)+
-    facet_wrap(~year,ncol = 1)+
+    #expand_limits(x=1900)+
+    facet_wrap(~year,nrow = 1)+
     #scale_y_continuous(expand=c(0,0),limits=c(-20,300))+
     theme_tufte()+theme(legend.position = "bottom",
                         legend.text = element_text(colour="black", size = 12),
@@ -240,18 +267,23 @@ graph_data<-cali_data %>% filter(country_state!="All")%>%
                         strip.text.x = element_text(size = 12, colour = "black", angle = 0),
                         axis.title.y = element_text(size = 15,face = "bold", colour="black"),
                         axis.title.x = element_text(size = 14,face = "bold", colour="black"),
+                        plot.margin=unit(c(1,3,1,1), 'cm'),
                         NULL)+
+    coord_cartesian(clip = 'off')+
     guides(fill=guide_legend(nrow=1,byrow=TRUE))+
-    labs(x=expression("Refinery Crude Supply, Thousands of Barrels per Day"),y=expression('Oil carbon intensity '*'(gCO'[2]*'e/MJ)'),
-         title="2015-19 California Carbon Intensity of Refinery Crude Supply",
+    labs(#x=expression("Refinery Crude Supply, Thousands of Barrels per Day"),y=expression('Oil carbon intensity '*'(gCO'[2]*'e/MJ)'),
+         #title="2015-19 California Carbon Intensity of Refinery Crude Supply",
          #subtitle="Difference between solid fill and outline is change in bids due to proposed federal fuel-specific OBPS.\nAssumed OBPS is 800kg/MWh for coal, 370kg/MWh for gas.",
-         caption="Source: CARB (2017-2020) data at https://www.arb.ca.gov/fuels/lcfs/crude-oil/crude-oil.htm. Graph by Andrew Leach")
+         #caption="Source: CARB (2017-2020) data at https://www.arb.ca.gov/fuels/lcfs/crude-oil/crude-oil.htm. Graph by Andrew Leach"
+      NULL)
 
-    ggsave("cali_crude_tab.png",width=20,height=18,dpi=600)
-    ggsave("cali_crude_small.png",width=20,height=18,dpi=150)
-    
+    ggsave("cali_crude_tab.png",width=20,height=18,dpi=300,bg="white")
+    ggsave("cali_crude_small.png",width=20,height=18,dpi=150,bg="white")
 
-year_vec<-seq(2015,2020,1)
+    blakes_blue="dodgerblue"  
+
+year_vec<-seq(2015,2021,1)
+year<-2021
 for(year_index in year_vec)
 {
     ggplot(graph_data%>%filter(year==year_index) %>%mutate(crude_label=str_wrap(crude_name,width = 12))) +
@@ -259,7 +291,8 @@ for(year_index in year_vec)
       
       geom_label_repel(data=graph_data %>%filter(year==year_index) %>%mutate(crude_label=paste(str_wrap(crude_name,width = 12),"\n(",ci_g_mj,"g/MJ)",sep = ""))%>%filter(Canada==TRUE),
                        aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label = crude_label),
-                       size = 3.5, ylim = c(35, 50),direction="both",force=2,box.padding = 1)+
+                       size = 3.5, ylim = c(35, 50),xlim = c(0, 1500),
+                       direction="both",force=2,box.padding = 1,max.overlaps = 100)+
       
       geom_label_repel(data=graph_data %>% filter(year==year_index) %>%group_by(year)%>%slice(which.min(abs(ci_g_mj-avg_ci))),
                        aes(x=c(cum_prod-volume/2)/365/10^3,y=ci_g_mj,label=paste("California ",year,"\naverage\n(",avg_ci,"g/MJ)",sep="")),
@@ -272,8 +305,8 @@ for(year_index in year_vec)
       scale_colour_viridis("",discrete=T,option = "D",labels=c("International Crudes","Canadian Crudes","US Crudes"))+  
       
       
-      scale_x_continuous(breaks = pretty_breaks(n=5),expand=c(0,0))+
-      #expand_limits(x=1900)+
+      scale_x_continuous(breaks = pretty_breaks(n=15),expand=c(0,0))+
+      #expand_limits(x=1600)+
       #expand_limits(y=55)+
       #facet_wrap(~year,ncol = 1)+
       #scale_y_continuous(expand=c(0,0),limits=c(-20,300))+
@@ -290,14 +323,17 @@ for(year_index in year_vec)
                           strip.text.x = element_text(size = 12, colour = "black", angle = 0),
                           axis.title.y = element_text(size = 15,face = "bold", colour="black"),
                           axis.title.x = element_text(size = 14,face = "bold", colour="black"),
+                          #top-right-bottom-left
+                          plot.margin=unit(c(1,3,1,1), 'cm'),
                           NULL)+
+      coord_cartesian(clip = 'off')+
       guides(fill=guide_legend(nrow=1,byrow=TRUE))+
       labs(x=expression("Refinery Crude Supply, Thousands of Barrels per Day"),y=expression('Oil carbon intensity '*'(gCO'[2]*'e/MJ)'),
            title=paste("Carbon Intensity of California Refinery Crude Supply,",year_index),
            #subtitle="Difference between solid fill and outline is change in bids due to proposed federal fuel-specific OBPS.\nAssumed OBPS is 800kg/MWh for coal, 370kg/MWh for gas.",
-           caption="Source: CARB (2017-2020) data at https://www.arb.ca.gov/fuels/lcfs/crude-oil/crude-oil.htm. Graph by Andrew Leach")
-     ggsave(paste("cali_crude_",year_index,".png",sep=""),width=16,height=9,dpi=600)
-    ggsave(paste("cali_crude_",year_index,"_small.png",sep=""),width=16,height=9,dpi=150)
+           caption="Source: CARB (2015-2021) data at https://www.arb.ca.gov/fuels/lcfs/crude-oil/crude-oil.htm. Graph by Andrew Leach")
+     ggsave(paste("cali_crude_",year_index,".png",sep=""),width=16,height=9,dpi=300,bg="white")
+    ggsave(paste("cali_crude_",year_index,"_small.png",sep=""),width=16,height=9,dpi=150,bg="white")
 }   
     
     
