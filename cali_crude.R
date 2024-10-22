@@ -236,6 +236,34 @@ cali_data<-cali_data%>%
 cali_2022<-cali_data
 
 
+location<- "2023_crude_average_ci_value_final.pdf"
+
+
+# Extract the 2023 data
+out <- extract_tables(location)
+cali_data<-data.frame(do.call("rbind", out),stringsAsFactors = F)
+total_vol=cali_data$X4[3]
+avg_ci=cali_data$X4[2]
+cali_data <-cali_data %>% slice(-c(1:4))
+names(cali_data)<-cali_data[1,]
+cali_data<-cali_data[-1,]
+cali_data[1,1]<-"All"
+cali_data<-clean_names(cali_data)
+
+cali_data<-cali_data%>% 
+  rename(volume = 4)%>%mutate(volume=as.numeric(gsub(",","",volume)))%>%
+  filter(!is.na(volume))%>%
+  mutate(country_state=ifelse(country_state=="",NA,country_state),#set blanks to NA
+         country_state=na.locf(country_state), #use zoo to fill forward
+         ci_g_mj=as.numeric(ci_g_mj),
+         year=2022,
+         total_volume=as.numeric(gsub(",","",total_vol)),
+         avg_ci=as.numeric(avg_ci)
+  )
+cali_2022<-cali_data
+
+
+
 
 
 
